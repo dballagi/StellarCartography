@@ -65,6 +65,7 @@
     </Compile>
     <Compile Include="Model\StellarCartographyModel.cs" />
     <Compile Include="ViewModel\Common\DelegateCommand.cs" />
+    <Compile Include="ViewModel\Common\ObservableRangeCollection.cs" />
     <Compile Include="ViewModel\MainViewModel.cs" />
     <Compile Include="ViewModel\Common\ViewModelBase.cs" />
     <Compile Include="Model\PictureRect.cs" />

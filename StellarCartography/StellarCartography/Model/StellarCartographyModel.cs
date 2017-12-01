@@ -12,6 +12,8 @@ namespace StellarCartography.Model
 {
     class StellarCartographyModel
     {
+        #region StellarCartographyStates enum
+
         public enum StellarCartographyStates
         {
             GameStartSplashScreen = 0,
@@ -22,9 +24,17 @@ namespace StellarCartography.Model
             GameOverSplashScreen = 5
         }
 
+        #endregion
+
+        #region Static fields
+
         private static readonly Random Random = new Random();
         private static readonly Int32 GAME_ROUNDS = 2;
-        
+
+        #endregion
+
+        #region Fields
+
         private Int32 roundNumber;
 
         private IList<PictureRect> stars;
@@ -34,6 +44,10 @@ namespace StellarCartography.Model
         private IList<Int32> lastStarIndices;
         private IList<Int32> lastPlanetIndices;
         private IList<Int32> lastBackgroundIndices;
+
+        #endregion
+
+        #region Properties
 
         public StellarCartographyStates CurrentState { get; private set; }
         public String StatusMessage { get; private set; }
@@ -49,10 +63,18 @@ namespace StellarCartography.Model
         }
 
         public PictureRect Star { get; private set; }
+        public IList<PictureRect> Planets { get; private set; }
 
+        #endregion
+
+        #region Events
 
         public event EventHandler UpdateGameField;
         public event EventHandler UpdateStatusText;
+
+        #endregion
+
+        #region Constructor
 
         public StellarCartographyModel()
         {
@@ -63,36 +85,12 @@ namespace StellarCartography.Model
             this.lastStarIndices = new List<Int32>();
             this.lastPlanetIndices = new List<Int32>();
             this.lastBackgroundIndices = new List<Int32>();
+            this.Planets = new List<PictureRect>();
         }
 
-        private void LoadResources()
-        {
-            this.stars = new List<PictureRect>();
-            this.planets = new List<PictureRect>();
-            this.backgrounds = new List<PictureRect>();
+        #endregion
 
-            ResourceSet resourceSet = Properties.Resources.ResourceManager.GetResourceSet(CultureInfo.CurrentUICulture, true, true);
-            foreach (DictionaryEntry entry in resourceSet)
-            {
-                if (entry.Key.ToString().Contains("planet"))
-                {
-                    this.planets.Add(new PictureRect(0, 0, entry.Value as Bitmap));
-                }
-                else if (entry.Key.ToString().Contains("background"))
-                {
-                    this.backgrounds.Add(new PictureRect(0, 0, entry.Value as Bitmap));
-                }
-                else if (entry.Key.ToString().Contains("sun"))
-                {
-                    double ratio = StellarCartographyModel.Random.NextDouble() * (1 - 0.8) + 0.8;
-
-                    this.stars.Add(new PictureRect(0, 0, new Bitmap(entry.Value as Bitmap, new Size((int)(200 * ratio), (int)(200 * ratio)))));
-                }
-            }
-
-            this.SplashImage = new PictureRect(0, 0, Properties.Resources.splash);
-            this.CRTEffectImage = new PictureRect(0, 0, Properties.Resources.crt_effect);
-        }
+        #region Public methods
 
         public void StartNewGame()
         {
@@ -169,9 +167,43 @@ namespace StellarCartography.Model
             this.UpdateGameField(this, new EventArgs());
         }
 
+        #endregion
+
+        #region Private methods
+
+        private void LoadResources()
+        {
+            this.stars = new List<PictureRect>();
+            this.planets = new List<PictureRect>();
+            this.backgrounds = new List<PictureRect>();
+
+            ResourceSet resourceSet = Properties.Resources.ResourceManager.GetResourceSet(CultureInfo.CurrentUICulture, true, true);
+            foreach (DictionaryEntry entry in resourceSet)
+            {
+                if (entry.Key.ToString().Contains("planet"))
+                {
+                    this.planets.Add(new PictureRect(0, 0, new Bitmap(entry.Value as Bitmap, new Size((int)(100), (int)(100)))));
+                }
+                else if (entry.Key.ToString().Contains("background"))
+                {
+                    this.backgrounds.Add(new PictureRect(0, 0, entry.Value as Bitmap));
+                }
+                else if (entry.Key.ToString().Contains("sun"))
+                {
+                    double ratio = StellarCartographyModel.Random.NextDouble() * (1 - 0.8) + 0.8;
+
+                    this.stars.Add(new PictureRect(0, 0, new Bitmap(entry.Value as Bitmap, new Size((int)(200 * ratio), (int)(200 * ratio)))));
+                }
+            }
+
+            this.SplashImage = new PictureRect(0, 0, Properties.Resources.splash);
+            this.CRTEffectImage = new PictureRect(0, 0, Properties.Resources.crt_effect);
+        }
+
         private void GenerateField()
         {
             this.GenerateStar();
+            this.GeneratePlanets();
         }
 
         private void GenerateStar()
@@ -179,13 +211,32 @@ namespace StellarCartography.Model
             int x = StellarCartographyModel.Random.Next(500);
             int y = StellarCartographyModel.Random.Next(500);
 
-            int index = GetUnusedIndex(this.stars.Count, lastStarIndices, 2);
+            int index = this.GetUnusedIndex(this.stars.Count, lastStarIndices, 2);
 
             PictureRect selectedStar = this.stars[index];
-            selectedStar.X = 710 + x - 1920 / 2;
-            selectedStar.Y = 290 + y - 1080 / 2;
+            selectedStar.X = 710 + x;
+            selectedStar.Y = 290 + y;
 
             this.Star = selectedStar;
+        }
+
+        private void GeneratePlanets()
+        {
+            int x, y;
+
+            for (int i = 0; i < 4; i++)
+            {
+                x = StellarCartographyModel.Random.Next(1920 / 2);
+                y = StellarCartographyModel.Random.Next(1080 / 2);
+
+                int index = this.GetUnusedIndex(this.planets.Count, lastPlanetIndices, 10);
+
+                PictureRect selectedPlanet = this.planets[index];
+                selectedPlanet.X = x;
+                selectedPlanet.Y = y;
+
+                this.Planets.Add(selectedPlanet);
+            }
         }
 
         private int GetUnusedIndex(int numberOfElements, IList<Int32> indexCollection, int numberToKeep)
@@ -204,6 +255,7 @@ namespace StellarCartography.Model
 
             return index;
         }
+
+        #endregion
     }
 }
-

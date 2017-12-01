@@ -1,6 +1,7 @@
 ﻿using StellarCartography.Model;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -10,19 +11,31 @@ namespace StellarCartography.ViewModel
 {
     class MainViewModel : ViewModelBase
     {
+        #region Static fields
+
         private static readonly Int32 ROUND_TIME = 5;
+
+        #endregion
+
+        #region Fields
 
         private StellarCartographyModel model;
         private Timer timer;
         private Int32 time;
 
-        public IEnumerable<PictureRect> pictures;
+        private ObservableRangeCollection<PictureRect> pictures;
+
+        #endregion
+
+        #region Properties
+
+        #region DelegateCommands
 
         public DelegateCommand QuitCommand { get; private set; }
         public DelegateCommand StepCommand { get; private set; }
         public DelegateCommand TestCommand { get; private set; }
 
-        public event EventHandler Quit;
+        #endregion
 
         private Boolean itemsControlVisible;
         public Boolean ItemsControlVisible
@@ -92,7 +105,7 @@ namespace StellarCartography.ViewModel
             }
         }
 
-        public IEnumerable<PictureRect> Pictures
+        public ObservableRangeCollection<PictureRect> Pictures
         {
             get
             {
@@ -104,6 +117,16 @@ namespace StellarCartography.ViewModel
                 OnPropertyChanged();
             }
         }
+
+        #endregion
+
+        #region Events
+
+        public event EventHandler Quit;
+
+        #endregion
+
+        #region Constructor
 
         public MainViewModel(StellarCartographyModel model)
         {
@@ -119,6 +142,10 @@ namespace StellarCartography.ViewModel
             this.StepCommand = new DelegateCommand(param => OnStepCommand());
             this.TestCommand = new DelegateCommand(param => OnTestCommand());
         }
+
+        #endregion
+
+        #region Private methods
 
         private void OnQuitCommand()
         {
@@ -149,12 +176,14 @@ namespace StellarCartography.ViewModel
             {
                 case StellarCartographyModel.StellarCartographyStates.Drawing:
 
-                    this.Pictures = new List<PictureRect>()
+                    this.Pictures = null;
+                    this.Pictures = new ObservableRangeCollection<PictureRect>()
                     {
                         model.Background,
-                        model.Star,
-                        model.CRTEffectImage
+                        model.Star
                     };
+                    this.Pictures.AddRange(model.Planets);
+                    this.Pictures.Add(model.CRTEffectImage);
 
                     this.time = ROUND_TIME;
                     this.timer = new Timer(1000);
@@ -184,7 +213,6 @@ namespace StellarCartography.ViewModel
 
                     break;
             }
-
         }
 
         private void OnUpdateStatusText(object sender, EventArgs e)
@@ -221,5 +249,7 @@ namespace StellarCartography.ViewModel
                 this.model.StepGame();
             }
         }
+
+        #endregion
     }
 }
