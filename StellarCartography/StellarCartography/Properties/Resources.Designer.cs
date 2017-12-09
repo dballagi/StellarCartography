@@ -63,6 +63,26 @@ namespace StellarCartography.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap asteroid_1 {
+            get {
+                object obj = ResourceManager.GetObject("asteroid_1", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap asteroid_2 {
+            get {
+                object obj = ResourceManager.GetObject("asteroid_2", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap background_1 {
             get {
                 object obj = ResourceManager.GetObject("background_1", resourceCulture);
@@ -157,6 +177,22 @@ namespace StellarCartography.Properties {
             get {
                 object obj = ResourceManager.GetObject("background_9", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {
+        ///	&quot;resolutionX&quot; : 1920,
+        ///	&quot;resolutionY&quot; : 1080,
+        ///	&quot;rounds&quot; : 2,
+        ///	&quot;gameFieldRows&quot; : 9,
+        ///	&quot;gameFieldColumns&quot; : 13,
+        ///	&quot;roundTime&quot; : 5
+        ///}.
+        /// </summary>
+        internal static string config {
+            get {
+                return ResourceManager.GetString("config", resourceCulture);
             }
         }
         
@@ -456,6 +492,56 @@ namespace StellarCartography.Properties {
         internal static System.Drawing.Bitmap splash {
             get {
                 object obj = ResourceManager.GetObject("splash", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap star_ship_1 {
+            get {
+                object obj = ResourceManager.GetObject("star_ship_1", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap star_ship_2 {
+            get {
+                object obj = ResourceManager.GetObject("star_ship_2", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap star_ship_3 {
+            get {
+                object obj = ResourceManager.GetObject("star_ship_3", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap star_ship_4 {
+            get {
+                object obj = ResourceManager.GetObject("star_ship_4", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap stargate_ring {
+            get {
+                object obj = ResourceManager.GetObject("stargate_ring", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

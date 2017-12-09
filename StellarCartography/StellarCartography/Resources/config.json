@@ -1,0 +1,8 @@
+{
+	"resolutionX" : 1920,
+	"resolutionY" : 1080,
+	"rounds" : 2,
+	"gameFieldRows" : 9,
+	"gameFieldColumns" : 13,
+	"roundTime" : 5
+}

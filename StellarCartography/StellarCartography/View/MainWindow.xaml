@@ -44,6 +44,32 @@
             </Style.Triggers>
         </Style>
 
+        <Style x:Key="BackgroundStyle" TargetType="FrameworkElement">
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding ItemsControlVisible}" Value="false">
+                    <DataTrigger.EnterActions>
+                        <BeginStoryboard>
+                            <Storyboard>
+                                <DoubleAnimation
+                Storyboard.TargetProperty="(Opacity)"
+                From="0.0" To="1.0" Duration="0:0:1"/>
+                            </Storyboard>
+                        </BeginStoryboard>
+                    </DataTrigger.EnterActions>
+
+                    <DataTrigger.ExitActions>
+                        <BeginStoryboard>
+                            <Storyboard>
+                                <DoubleAnimation
+                    Storyboard.TargetProperty="(Opacity)"
+                    From="1.0" To="0.0" Duration="0:0:1"/>
+                            </Storyboard>
+                        </BeginStoryboard>
+                    </DataTrigger.ExitActions>
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
+
 
         <Style x:Key="LabelStyle" TargetType="FrameworkElement">
             <Style.Triggers>
@@ -76,15 +102,15 @@
 
     </Window.Resources>
 
-    <Grid>
+    <Grid Background="Black">
 
-        <Image Width="{Binding SplashImage.Width}" Height="{Binding SplashImage.Height}" Source="{Binding SplashImage.Source}" Stretch="Fill">
+        <Image Width="{Binding SplashImage.Width}" Height="{Binding SplashImage.Height}" Source="{Binding SplashImage.Source}" Style="{StaticResource BackgroundStyle}" Stretch="Fill">
             <Image.RenderTransform>
                 <TranslateTransform X="{Binding SplashImage.X}" Y="{Binding SplashImage.Y}"/>
             </Image.RenderTransform>
         </Image>
 
-        <ItemsControl ItemsSource="{Binding Pictures}" Style="{StaticResource ItemsControlStyle}" Opacity="0">
+        <ItemsControl ItemsSource="{Binding Pictures}" Style="{StaticResource ItemsControlStyle}" Opacity="0" Width="{Binding ItemsControlWidth}" Height="{Binding ItemsControlHeight}">
             <ItemsControl.ItemsPanel>
                 <ItemsPanelTemplate>
                     <Grid/>

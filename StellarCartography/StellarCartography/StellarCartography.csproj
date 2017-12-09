@@ -34,6 +34,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Newtonsoft.Json, Version=10.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.10.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
@@ -65,7 +68,6 @@
     </Compile>
     <Compile Include="Model\StellarCartographyModel.cs" />
     <Compile Include="ViewModel\Common\DelegateCommand.cs" />
-    <Compile Include="ViewModel\Common\ObservableRangeCollection.cs" />
     <Compile Include="ViewModel\MainViewModel.cs" />
     <Compile Include="ViewModel\Common\ViewModelBase.cs" />
     <Compile Include="Model\PictureRect.cs" />
@@ -92,6 +94,7 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+    <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -136,6 +139,9 @@
   <ItemGroup>
     <Resource Include="Resources\Fonts\NeoNoire.ttf" />
     <Resource Include="Resources\Fonts\HTNeon.ttf" />
+    <None Include="Resources\config.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="Resources\Planets\planet_1.png" />
   </ItemGroup>
   <ItemGroup>
@@ -230,6 +236,27 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\Stellar bodies\sun_4.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Stellar bodies\asteroid_1.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Stellar bodies\asteroid_2.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Objects\stargate_ring.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Objects\star_ship_1.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Objects\star_ship_2.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Objects\star_ship_3.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Objects\star_ship_4.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

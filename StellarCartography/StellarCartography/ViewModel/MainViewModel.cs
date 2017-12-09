@@ -11,19 +11,15 @@ namespace StellarCartography.ViewModel
 {
     class MainViewModel : ViewModelBase
     {
-        #region Static fields
-
-        private static readonly Int32 ROUND_TIME = 5;
-
-        #endregion
-
         #region Fields
+
+        private Int32 ROUND_TIME;
 
         private StellarCartographyModel model;
         private Timer timer;
         private Int32 time;
 
-        private ObservableRangeCollection<PictureRect> pictures;
+        private ObservableCollection<PictureRect> pictures;
 
         #endregion
 
@@ -48,6 +44,38 @@ namespace StellarCartography.ViewModel
             {
                 this.itemsControlVisible = value;
                 OnPropertyChanged();
+            }
+        }
+
+        public Int32 ItemsControlWidth
+        {
+            get
+            {
+                return this.model.RESOLUTION_X;
+            }
+        }
+
+        public Int32 ItemsControlHeight
+        {
+            get
+            {
+                return this.model.RESOLUTION_Y;
+            }
+        }
+
+        private Double ItemsControlTranslateX
+        {
+            get
+            {
+                return (Double)(1920 - this.model.RESOLUTION_X) / 2;
+            }
+        }
+
+        private Double ItemsControlTranslateY
+        {
+            get
+            {
+                return (Double)(1080 - this.model.RESOLUTION_Y) / 2;
             }
         }
 
@@ -105,7 +133,7 @@ namespace StellarCartography.ViewModel
             }
         }
 
-        public ObservableRangeCollection<PictureRect> Pictures
+        public ObservableCollection<PictureRect> Pictures
         {
             get
             {
@@ -128,11 +156,16 @@ namespace StellarCartography.ViewModel
 
         #region Constructor
 
-        public MainViewModel(StellarCartographyModel model)
+        public MainViewModel(StellarCartographyModel model, Int32 roundTime)
         {
+            this.ROUND_TIME = roundTime;
+
             this.model = model;
             this.model.UpdateGameField += OnUpdateGameField;
             this.model.UpdateStatusText += OnUpdateStatusText;
+
+            OnPropertyChanged("ItemsControlWidth");
+            OnPropertyChanged("ItemsControlHeight");
 
             this.ItemsControlVisible = false;
             this.StatusVisible = true;
@@ -175,15 +208,16 @@ namespace StellarCartography.ViewModel
             switch (this.model.CurrentState)
             {
                 case StellarCartographyModel.StellarCartographyStates.Drawing:
-
-                    this.Pictures = null;
-                    this.Pictures = new ObservableRangeCollection<PictureRect>()
+                    
+                    this.Pictures = new ObservableCollection<PictureRect>()
                     {
                         model.Background,
                         model.Star
                     };
-                    this.Pictures.AddRange(model.Planets);
-                    this.Pictures.Add(model.CRTEffectImage);
+                    Array.ForEach<PictureRect>(model.Planets.ToArray(), p => this.Pictures.Add(p));
+                    Array.ForEach<PictureRect>(model.Ships.ToArray(), s => this.Pictures.Add(s));
+                    this.Pictures.Add(model.Stargate);
+                    //this.Pictures.Add(model.CRTEffectImage);
 
                     this.time = ROUND_TIME;
                     this.timer = new Timer(1000);
