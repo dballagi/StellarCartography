@@ -42,6 +42,12 @@ namespace StellarCartography.Model
                          BitmapSizeOptions.FromEmptyOptions());
         }
 
+        public void CalculateOffset(Double gridWidth, Double gridHeight)
+        {
+            this.X += (gridWidth - this.Width) / 2;
+            this.Y += (gridHeight - this.Height) / 2;
+        }
+
         public void Rotate(RotateFlipType rotateType = RotateFlipType.Rotate90FlipNone)
         {
             this.Image.RotateFlip(rotateType);
@@ -56,6 +62,14 @@ namespace StellarCartography.Model
         {
             int rotate = StellarCartographyModel.Random.Next(4);
             this.Rotate(new RotateFlipType[] { RotateFlipType.RotateNoneFlipNone, RotateFlipType.Rotate180FlipNone, RotateFlipType.Rotate270FlipNone, RotateFlipType.Rotate90FlipNone }[rotate]);
+        }
+
+        public bool Intersects(PictureRect other)
+        {
+            Rect thisRect = new Rect(new System.Windows.Point(this.X, this.Y), new System.Windows.Size(this.Width, this.Height));
+            Rect otherRect = new Rect(new System.Windows.Point(other.X, other.Y), new System.Windows.Size(other.Width, other.Height));
+
+            return thisRect.IntersectsWith(otherRect);
         }
 
         public PictureRect Clone()

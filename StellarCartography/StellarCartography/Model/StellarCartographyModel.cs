@@ -209,14 +209,17 @@ namespace StellarCartography.Model
             this.asteroids = new List<PictureRect>();
             this.ships = new List<PictureRect>();
 
-            Double baseScale = (Double)100 / 1920;
+            Double maxDimension = xRatio > yRatio ? xRatio : yRatio;
 
             ResourceSet resourceSet = Properties.Resources.ResourceManager.GetResourceSet(CultureInfo.CurrentUICulture, true, true);
             foreach (DictionaryEntry entry in resourceSet)
             {
                 if (entry.Key.ToString().Contains("planet"))
                 {
-                    this.planets.Add(new PictureRect(0, 0, new Bitmap(entry.Value as Bitmap, this.ResizeKeepAspect((entry.Value as Bitmap).Size, (int)(RESOLUTION_X * baseScale), (int)(RESOLUTION_X * baseScale)))));
+                    this.planets.Add(new PictureRect(0, 0, new Bitmap(entry.Value as Bitmap, 
+                        this.ResizeKeepAspect((entry.Value as Bitmap).Size, 
+                        (int)(maxDimension * .5d), 
+                        (int)(maxDimension * .5d)))));
                 }
                 else if (entry.Key.ToString().Contains("background"))
                 {
@@ -226,19 +229,31 @@ namespace StellarCartography.Model
                 {
                     double ratio = StellarCartographyModel.Random.NextDouble() * (1 - 0.8) + 0.8;
 
-                    this.stars.Add(new PictureRect(0, 0, new Bitmap(entry.Value as Bitmap, this.ResizeKeepAspect((entry.Value as Bitmap).Size, (int)(RESOLUTION_X * baseScale * 2 * ratio), (int)(RESOLUTION_X * baseScale * 2 * ratio)))));
+                    this.stars.Add(new PictureRect(0, 0, new Bitmap(entry.Value as Bitmap, 
+                        this.ResizeKeepAspect((entry.Value as Bitmap).Size, 
+                        (int)(maxDimension * ratio), 
+                        (int)(maxDimension * ratio)))));
                 }
                 else if (entry.Key.ToString().Contains("asteroid"))
                 {
-                    this.asteroids.Add(new PictureRect(0, 0, new Bitmap(entry.Value as Bitmap, this.ResizeKeepAspect((entry.Value as Bitmap).Size, (int)(RESOLUTION_X * baseScale), (int)(RESOLUTION_X * baseScale)))));
+                    this.asteroids.Add(new PictureRect(0, 0, new Bitmap(entry.Value as Bitmap, 
+                        this.ResizeKeepAspect((entry.Value as Bitmap).Size, 
+                        (int)(maxDimension * .7d), 
+                        (int)(maxDimension * .7d)))));
                 }
                 else if (entry.Key.ToString().Contains("stargate_ring"))
                 {
-                    this.Stargate = new PictureRect(0, 0, new Bitmap(entry.Value as Bitmap, this.ResizeKeepAspect((entry.Value as Bitmap).Size, (int)(RESOLUTION_X * baseScale), (int)(RESOLUTION_X * baseScale))));
+                    this.Stargate = new PictureRect(0, 0, new Bitmap(entry.Value as Bitmap, 
+                        this.ResizeKeepAspect((entry.Value as Bitmap).Size, 
+                        (int)(maxDimension * .4d), 
+                        (int)(maxDimension * .4d))));
                 }
                 else if (entry.Key.ToString().Contains("star_ship"))
                 {
-                    this.ships.Add(new PictureRect(0, 0, new Bitmap(entry.Value as Bitmap, this.ResizeKeepAspect((entry.Value as Bitmap).Size, (int)(RESOLUTION_X * baseScale), (int)(RESOLUTION_X * baseScale)))));
+                    this.ships.Add(new PictureRect(0, 0, new Bitmap(entry.Value as Bitmap, 
+                        this.ResizeKeepAspect((entry.Value as Bitmap).Size, 
+                        (int)(maxDimension * .7d), 
+                        (int)(maxDimension * .7d)))));
                 }
             }
 
@@ -267,6 +282,7 @@ namespace StellarCartography.Model
             PictureRect selectedStar = this.stars[index];
             selectedStar.X = x * this.xRatio;
             selectedStar.Y = y * this.yRatio;
+            selectedStar.CalculateOffset(this.xRatio, this.yRatio);
 
             this.Star = selectedStar;
         }
@@ -290,6 +306,7 @@ namespace StellarCartography.Model
                 
                 selectedPlanet.X *= this.xRatio;
                 selectedPlanet.Y *= this.yRatio;
+                selectedPlanet.CalculateOffset(this.xRatio, this.yRatio);
 
                 this.Planets.Add(selectedPlanet);
             }
@@ -338,7 +355,9 @@ namespace StellarCartography.Model
                     if (j % 2 == 0)
                         newRoid.Rotate();
 
-                    if ((newRoid.X != this.Star.X || newRoid.Y != this.Star.Y) && i != removeIndex)
+                    newRoid.CalculateOffset(this.xRatio, this.yRatio);
+
+                    if (!newRoid.Intersects(this.Star) && i != removeIndex)
                         this.Planets.Add(newRoid);
                 }
             }
@@ -357,8 +376,9 @@ namespace StellarCartography.Model
 
                 this.Stargate.X = x * this.xRatio;
                 this.Stargate.Y = y * this.yRatio;
+                this.Stargate.CalculateOffset(this.xRatio, this.yRatio);
 
-            } while (this.Planets.Any(p => p.X == this.Stargate.X && p.Y == this.Stargate.Y));
+            } while (this.Planets.Any(p => p.Intersects(this.Stargate)));
         }
 
         private void GenerateStarShips()
@@ -382,12 +402,13 @@ namespace StellarCartography.Model
                     ship.X = x * this.xRatio;
                     ship.Y = y * this.yRatio;
 
-                } while (this.Planets.Any(p => p.X == ship.X && p.Y == ship.Y) ||
-                         this.Ships.Any(s => s.X == ship.X && s.Y == ship.Y) || 
-                         (this.Star.X == ship.X && this.Star.Y == ship.Y) || 
-                         (this.Stargate.X == ship.X || this.Stargate.Y == ship.Y));
+                } while (this.Planets.Any(p => p.Intersects(ship)) ||
+                         this.Ships.Any(s => s.Intersects(ship)) || 
+                         this.Star.Intersects(ship) || 
+                         this.Stargate.Intersects(ship));
 
                 ship.RandomRotate();
+                ship.CalculateOffset(this.xRatio, this.yRatio);
                 this.Ships.Add(ship);
             }
         }
